@@ -8,37 +8,20 @@
 <template>
     <div class="fileList" v-loading="loading">
         <div class="list" v-if="fileList && fileList.content.length > 0">
-            <div
-                v-for="(item, index) in fileList.content"
-                :key="index"
-                @click="openFolder(item, index)"
-            >
+            <div v-for="(item, index) in fileList.content" :key="index" @click="openFolder(item, index)">
                 <div class="icon">
-                    <el-icon
-                        size="60"
-                        color="var(--theme-color)"
-                        v-if="item.icon != 'images'"
-                    >
+                    <el-icon size="60" color="var(--theme-color)" v-if="item.icon != 'images'">
                         <div v-html="item.icon"></div>
                     </el-icon>
-                    <el-image
-                        v-else
-                        :src="item.thumb"
-                        fit="cover"
-                        loading="lazy"
-                    />
+                    <el-image v-else :src="item.thumb" fit="cover" loading="lazy" />
                 </div>
                 <p>{{ item.name }}</p>
             </div>
         </div>
     </div>
 
-    <FileInfoComm
-        v-if="fileList"
-        v-model:fileList="fileList.content"
-        v-model:index="infoIndex"
-        v-model:state="openInfoState"
-    />
+    <FileInfoComm v-if="fileList" v-model:fileList="fileList.content" v-model:index="infoIndex"
+        v-model:state="openInfoState" />
 </template>
 
 <script setup lang="ts">
@@ -71,11 +54,15 @@ async function getFsList() {
     const data = await http.fs.getFsList(search.value);
     loading.value = false;
 
+    // 图片格式处理
     const contentCache = data.content.map((content) => {
+        // 根据文件名获取文件类型
         const fileType = iconFileUtil.getIcon(content.name);
+        // 如果是图片，修改 thumb
         if (fileType.type === "images") {
             content.thumb = w.alistConfig.api + content.thumb;
         }
+        // 修改 icon 与 fileType
         content.icon = fileType.icon;
         content.fileType = fileType.type;
 
@@ -115,7 +102,7 @@ async function openFolder(item: FsType.ContentType, index: number) {
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         grid-auto-flow: row dense;
 
-        > div {
+        >div {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -131,7 +118,7 @@ async function openFolder(item: FsType.ContentType, index: number) {
                 transform: scale(1.05);
             }
 
-            > p {
+            >p {
                 font-size: 13px;
                 width: 100%;
                 word-wrap: break-word;
@@ -139,7 +126,8 @@ async function openFolder(item: FsType.ContentType, index: number) {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: -webkit-box;
-                -webkit-line-clamp: 3; /*数字是几就显示几行*/
+                -webkit-line-clamp: 3;
+                /*数字是几就显示几行*/
                 -webkit-box-orient: vertical;
             }
 

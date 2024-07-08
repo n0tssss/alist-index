@@ -7,16 +7,8 @@
 -->
 <template>
     <div>
-        <PathComm
-            v-if="fileListCommRef"
-            v-model:path="path"
-            :cb="fileListCommRef.getFsList"
-        />
-        <fileListComm
-            v-model:search="fsSearch"
-            v-model:path="path"
-            ref="fileListCommRef"
-        />
+        <PathComm v-if="fileListCommRef" v-model:path="path" :cb="fileListCommRef.getFsList" />
+        <fileListComm v-model:search="fsSearch" v-model:path="path" ref="fileListCommRef" />
     </div>
 </template>
 
@@ -26,7 +18,7 @@ import fileListComm from "@/components/fileListComm.vue";
 
 const fsSearch = ref<FsType.FsListType>({} as any);
 const fileListCommRef = ref<InstanceType<typeof fileListComm>>();
-const path = ref<string[]>(["n0ts", "照片与视频", "GTR 2023-7-29"]);
+const path = ref<string[]>(["n0ts", "照片与视频", "宝宝"]);
 
 onMounted(() => {
     fileListCommRef.value?.getFsList();

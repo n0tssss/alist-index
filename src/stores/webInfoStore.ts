@@ -18,7 +18,7 @@ export default defineStore("webInfo", {
     actions: {
         async fetchWebInfo() {
             if (!this.webInfo) {
-                const response = await http.get("/api/public/settings");
+                const response = await http.fs.getPublicSettings();
                 this.webInfo = response.data;
             }
         }

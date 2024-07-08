@@ -35,6 +35,8 @@ const webInfoStore = useWebInfoStore();
     .title {
         color: var(--theme-color);
         cursor: pointer;
+        font-size: 1.2rem;
+        font-weight: bold;
 
         &:hover {
             color: var(--theme-color-highlight);

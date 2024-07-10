@@ -15,19 +15,11 @@ import { createPinia } from "pinia";
 
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 
-import "viewerjs/dist/viewer.css";
-import VueViewer from "v-viewer";
-
 const app = createApp(App);
 
 const pinia = createPinia();
 app.use(pinia);
 app.use(router);
-app.use(VueViewer, {
-    defaultOptions: {
-        navbar: false
-    }
-});
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component);

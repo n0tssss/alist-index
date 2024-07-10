@@ -58,9 +58,10 @@ async function getFsList() {
     const contentCache = data.content.map((content) => {
         // 根据文件名获取文件类型
         const fileType = iconFileUtil.getIcon(content.name);
-        // 如果是图片，修改 thumb
+        // 如果是图片，修改 thumb 与 url 为链接
         if (fileType.type === "images") {
             content.thumb = w.alistConfig.api + content.thumb;
+            content.url = content.thumb.replace("type=thumb&", "");
         }
         // 修改 icon 与 fileType
         content.icon = fileType.icon;

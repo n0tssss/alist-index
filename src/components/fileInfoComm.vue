@@ -38,7 +38,7 @@ watch(
     bottom: 0;
     width: 80%;
     max-width: 1200px;
-    height: 80%;
+    height: 95%;
     border-radius: var(--border-radius);
     background-color: var(--background-light);
     box-shadow:

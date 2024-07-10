@@ -9,18 +9,19 @@
     <div class="imgBox" scroll-container>
         <div class="imgList">
             <div>
-                <div
-                    v-for="(item, index) in urlList"
-                    :key="index"
-                    @click="(event) => selectImg(event, index)"
-                >
-                    <el-image
-                        :class="{ active: index == imgIndex }"
-                        :src="item"
-                        fit="cover"
-                        loading="lazy"
-                    />
+                <div v-for="(item, index) in imgList" :key="index" @click="selectImg(index)">
+                    <el-image :class="{ active: index == imgIndex }" :src="item.thumb" fit="cover" loading="lazy" />
                 </div>
+            </div>
+        </div>
+
+        <div class="desc">
+            <div class="imgDesc" @click="viewerInit" v-loading="imgLoad">
+                <img :src="imgList[imgIndex].url" :alt="imgList[imgIndex].name" :key="imgList[imgIndex].name"
+                    @load="imgLoad = false">
+            </div>
+            <div class="fileInfo">
+                <p class="title">{{ imgList[imgIndex].name }}</p>
             </div>
         </div>
     </div>
@@ -28,6 +29,8 @@
 
 <script setup lang="ts">
 import * as FsType from "@/api/fs-type";
+import Viewer from "viewerjs";
+import "viewerjs/dist/viewer.css";
 
 const fileList = defineModel<FsType.ContentType[]>("fileList", {
     required: true
@@ -41,61 +44,93 @@ const imgList = computed(() => {
         return item.fileType === "images";
     });
 });
-console.log("🚀筛选后的图片数据 | imgList.value:", imgList.value);
-
-const urlList = ref<string[]>([]);
+// console.log("🚀筛选后的图片数据 | imgList.value:", imgList.value);
 
 // 修正索引
 const imgIndex = ref(0);
 for (let i = 0; i < imgList.value.length; i++) {
     if (imgList.value[i].name === fileList.value[currentIndex.value].name) {
         imgIndex.value = i;
-        console.log("🚀修正索引 | imgIndex:", imgIndex.value);
     }
-    // urlList.value.push(imgList.value[i].thumb.replace("type=thumb&", ""));
-    urlList.value.push(imgList.value[i].thumb);
+
+    setTimeout(() => {
+        selectImg(imgIndex.value);
+    }, 500);
 }
 
-function selectImg(event: MouseEvent, i: number) {
-    const parrent = document.querySelector(".imgBox");
+/**
+ * 根据索引定位导航栏图片
+ * @param i 索引
+ */
+function selectImg(i: number) {
+    if (!(i == imgIndex.value)) imgLoad.value = true;
     const scrollDom = document.querySelector(".imgList > div") as HTMLElement;
-    if (!parrent || !scrollDom) return;
-
-    const dom = event.target as HTMLElement;
-    const domX = dom.getBoundingClientRect().x;
-    const parentX = parrent.getBoundingClientRect().x;
-
-    console.log("选择元素距离父的x距离", domX - parentX);
-    console.log(
-        "父偏移",
-        parrent.clientWidth / 2 - (domX - parentX - dom.clientWidth / 2)
-    );
-    scrollDom.style.left = `${parrent.clientWidth / 2 - (domX - parentX + dom.clientWidth / 2)}px`;
+    const imgDom = document.querySelectorAll(".imgList > div > div")[0] as HTMLElement;
+    if (!scrollDom) return;
+    scrollDom.style.transform = `translateX(-${(imgDom.clientWidth + 10) * i}px)`;
 
     imgIndex.value = i;
+
+    if (viewer) viewer.update();
+}
+
+/**
+ * 查看图片初始化
+ */
+let viewer: any = null;
+async function viewerInit() {
+    await nextTick();
+    if (!viewer) {
+        const dom = document.querySelector(".imgDesc") as HTMLElement;
+        if (!dom) {
+            return setTimeout(() => {
+                viewerInit();
+            }, 100);
+        }
+
+        viewer = new Viewer(dom, {
+            toolbar: false,
+            keyboard: false,
+            navbar: false
+        });
+    }
+}
+viewerInit();
+
+const imgLoad = ref(true);
+
+/**
+ * 字节转 mb
+ */
+function bytesToMBFormatted(bytes: number) {
+    const MB = bytes / (1024 * 1024);
+    return MB.toFixed(2) + ' MB';
 }
 </script>
 
 <style scoped lang="less">
 .imgBox {
     height: 100%;
+    text-align: center
 }
 
 .imgList {
     width: 100%;
     overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    left: 0;
 
-    > div {
+    >div {
         transition: all 0.2s ease-in-out;
         padding: 20px 20px 0;
         box-sizing: border-box;
-        position: absolute;
-        bottom: 0;
-        left: 0;
         width: 100%;
         display: flex;
         flex-wrap: nowrap;
         gap: 10px;
+        position: relative;
+        left: calc(50% - 20px - 55px);
     }
 
     .el-image {
@@ -105,6 +140,7 @@ function selectImg(event: MouseEvent, i: number) {
         border: 5px solid white;
         border-radius: var(--border-radius);
         transition: all 0.2s ease-in-out;
+        box-sizing: border-box;
         box-shadow:
             rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
             rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
@@ -117,6 +153,40 @@ function selectImg(event: MouseEvent, i: number) {
     .active {
         border: 5px solid var(--theme-color);
         transform: translateY(-5px);
+    }
+}
+
+.desc {
+    height: 100%;
+
+    .imgDesc {
+        height: 65%;
+        cursor: pointer;
+
+        >img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+        }
+    }
+}
+
+.fileInfo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+
+    .title {
+        width: 100%;
+        text-align: center;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
     }
 }
 </style>

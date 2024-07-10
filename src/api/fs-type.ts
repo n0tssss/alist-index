@@ -19,6 +19,7 @@ export interface ContentType {
     hash_info?: any;
     icon?: string;
     fileType?: string;
+    url?: string;
 }
 
 export interface FsListResType {

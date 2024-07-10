@@ -18,7 +18,7 @@ import fileListComm from "@/components/fileListComm.vue";
 
 const fsSearch = ref<FsType.FsListType>({} as any);
 const fileListCommRef = ref<InstanceType<typeof fileListComm>>();
-const path = ref<string[]>(["n0ts", "照片与视频", "宝宝"]);
+const path = ref<string[]>(["n0ts", "照片与视频", "2024-1-11 小米14"]);
 
 onMounted(() => {
     fileListCommRef.value?.getFsList();

@@ -6,6 +6,7 @@
  * @Mail：mail@n0ts.top
  */
 
+import httpFilter from "@/filter/httpFilter";
 import axios from "axios";
 
 axios.interceptors.request.use(
@@ -29,6 +30,7 @@ axios.interceptors.request.use(
 // 添加响应拦截器
 axios.interceptors.response.use(
     function (response) {
+        response = httpFilter(response);
         return response.data;
     },
     function (error) {

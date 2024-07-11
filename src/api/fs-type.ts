@@ -30,3 +30,21 @@ export interface FsListResType {
     write: boolean;
     provider: string;
 }
+
+export interface FsResType {
+    name: string;
+    size: number;
+    is_dir: boolean;
+    modified: string;
+    created: string;
+    sign: string;
+    thumb: string;
+    type: number;
+    hashinfo: string;
+    hash_info: null;
+    raw_url: string;
+    readme: string;
+    header: string;
+    provider: string;
+    related: null;
+}

@@ -4,7 +4,7 @@
             <p>🏠主目录</p>
         </div>
         <div
-            v-for="(item, index) in path"
+            v-for="(item, index) in pathStore.path"
             :key="index"
             @click="pathClick(index)"
         >
@@ -15,16 +15,17 @@
 </template>
 
 <script setup lang="ts">
-const path = defineModel<string[]>("path", {
-    required: true
-});
+import usePathStore from "@/stores/pathStore";
+
+const pathStore = usePathStore();
 
 const props = defineProps<{
     cb: () => Promise<void>;
 }>();
 
 function pathClick(i: number) {
-    path.value = path.value.slice(0, i + 1);
+    pathStore.set(pathStore.path.slice(0, i + 1));
+
     setTimeout(() => {
         props.cb();
     }, 0);

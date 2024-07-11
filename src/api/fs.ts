@@ -15,5 +15,13 @@ export default {
     async getFsList(data: FsType.FsListType) {
         return (await http.post("/api/fs/list", data))
             .data as FsType.FsListResType;
+    },
+    /**
+     * 查询文件信息
+     * @param FsType.FsListType 参数
+     */
+    async getFs(data: FsType.FsListType) {
+        return (await http.post("/api/fs/get", data))
+            .data as FsType.FsResType;
     }
 };

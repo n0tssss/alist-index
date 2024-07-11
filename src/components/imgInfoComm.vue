@@ -9,19 +9,60 @@
     <div class="imgBox" scroll-container>
         <div class="imgList">
             <div>
-                <div v-for="(item, index) in imgList" :key="index" @click="selectImg(index)">
-                    <el-image :class="{ active: index == imgIndex }" :src="item.thumb" fit="cover" loading="lazy" />
+                <div
+                    v-for="(item, index) in imgList"
+                    :key="index"
+                    @click="selectImg(index)"
+                >
+                    <el-image
+                        :class="{ active: index == imgIndex }"
+                        :src="item.thumb"
+                        fit="cover"
+                        loading="lazy"
+                    />
                 </div>
             </div>
         </div>
 
         <div class="desc">
-            <div class="imgDesc" @click="viewerInit" v-loading="imgLoad">
-                <img :src="imgList[imgIndex].url" :alt="imgList[imgIndex].name" :key="imgList[imgIndex].name"
-                    @load="imgLoad = false">
+            <div class="imgDesc" v-loading="imgLoad">
+                <img
+                    :src="imgList[imgIndex].url"
+                    :alt="imgList[imgIndex].name"
+                    :key="imgList[imgIndex].name"
+                    @load="imgLoadSuccess"
+                />
             </div>
+            <p class="title">{{ imgList[imgIndex].name }}</p>
             <div class="fileInfo">
-                <p class="title">{{ imgList[imgIndex].name }}</p>
+                <span
+                    >大小：{{
+                        formatUtil.bitToMBOrGB(imgList[imgIndex].size)
+                    }}</span
+                >
+                <span
+                    >创建：{{
+                        formatUtil.timeToDate(imgList[imgIndex].created)
+                    }}</span
+                >
+            </div>
+            <div class="btnList">
+                <el-tooltip content="复制链接" placement="bottom">
+                    <el-button
+                        type="success"
+                        icon="CopyDocument"
+                        circle
+                        @click="formatUtil.copy(imgList[imgIndex].url)"
+                    />
+                </el-tooltip>
+                <el-tooltip content="下载" placement="bottom">
+                    <el-button
+                        type="primary"
+                        icon="Download"
+                        circle
+                        @click="formatUtil.openUrl(imgList[imgIndex].url)"
+                    />
+                </el-tooltip>
             </div>
         </div>
     </div>
@@ -29,6 +70,7 @@
 
 <script setup lang="ts">
 import * as FsType from "@/api/fs-type";
+import formatUtil from "@/utils/formatUtil";
 import Viewer from "viewerjs";
 import "viewerjs/dist/viewer.css";
 
@@ -65,13 +107,13 @@ for (let i = 0; i < imgList.value.length; i++) {
 function selectImg(i: number) {
     if (!(i == imgIndex.value)) imgLoad.value = true;
     const scrollDom = document.querySelector(".imgList > div") as HTMLElement;
-    const imgDom = document.querySelectorAll(".imgList > div > div")[0] as HTMLElement;
+    const imgDom = document.querySelectorAll(
+        ".imgList > div > div"
+    )[0] as HTMLElement;
     if (!scrollDom) return;
     scrollDom.style.transform = `translateX(-${(imgDom.clientWidth + 10) * i}px)`;
 
     imgIndex.value = i;
-
-    if (viewer) viewer.update();
 }
 
 /**
@@ -99,19 +141,18 @@ viewerInit();
 
 const imgLoad = ref(true);
 
-/**
- * 字节转 mb
- */
-function bytesToMBFormatted(bytes: number) {
-    const MB = bytes / (1024 * 1024);
-    return MB.toFixed(2) + ' MB';
+function imgLoadSuccess() {
+    imgLoad.value = false;
+    if (viewer) {
+        viewer.update();
+    }
 }
 </script>
 
 <style scoped lang="less">
 .imgBox {
     height: 100%;
-    text-align: center
+    text-align: center;
 }
 
 .imgList {
@@ -121,7 +162,7 @@ function bytesToMBFormatted(bytes: number) {
     bottom: 0;
     left: 0;
 
-    >div {
+    > div {
         transition: all 0.2s ease-in-out;
         padding: 20px 20px 0;
         box-sizing: border-box;
@@ -163,21 +204,13 @@ function bytesToMBFormatted(bytes: number) {
         height: 65%;
         cursor: pointer;
 
-        >img {
+        > img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: var(--border-radius);
         }
     }
-}
-
-.fileInfo {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 10px;
-    box-sizing: border-box;
 
     .title {
         width: 100%;
@@ -187,6 +220,27 @@ function bytesToMBFormatted(bytes: number) {
         justify-content: center;
         align-items: center;
         font-size: 1.2rem;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .fileInfo {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 10px;
+        box-sizing: border-box;
+
+        span {
+            color: var(--sub-font-color);
+        }
+    }
+
+    .btnList {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 }
 </style>

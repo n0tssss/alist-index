@@ -7,25 +7,12 @@
 -->
 <template>
     <div>
-        <PathComm v-if="fileListCommRef" :cb="fileListCommRef.getFsList" />
-        <fileListComm v-model:search="fsSearch" ref="fileListCommRef" />
+        <PathComm />
+        <!-- <ToolBarComm /> -->
+        <fileListComm />
     </div>
 </template>
 
-<script setup lang="ts">
-import * as FsType from "@/api/fs-type";
-import fileListComm from "@/components/fileListComm.vue";
-import usePathStore from "@/stores/pathStore";
-
-const pathStore = usePathStore();
-pathStore.set(["公开", "电影"]);
-
-const fsSearch = ref<FsType.FsListType>({} as any);
-const fileListCommRef = ref<InstanceType<typeof fileListComm>>();
-
-onMounted(() => {
-    fileListCommRef.value?.getFsList();
-});
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang="less"></style>

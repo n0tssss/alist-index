@@ -16,11 +16,13 @@ declare module 'vue' {
     FileInfoComm: typeof import('./components/fileInfoComm.vue')['default']
     FileListComm: typeof import('./components/fileListComm.vue')['default']
     HeaderComm: typeof import('./components/headerComm.vue')['default']
+    IconButtonComm: typeof import('./components/iconButtonComm.vue')['default']
     ImgInfoComm: typeof import('./components/imgInfoComm.vue')['default']
     OrtherFileComm: typeof import('./components/ortherFileComm.vue')['default']
     PathComm: typeof import('./components/pathComm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ToolBarComm: typeof import('./components/toolBarComm.vue')['default']
     VideoComm: typeof import('./components/videoComm.vue')['default']
     VideoInfoComm: typeof import('./components/videoInfoComm.vue')['default']
   }

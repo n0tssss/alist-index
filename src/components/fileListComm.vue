@@ -6,10 +6,13 @@
  * @Mail：mail@n0ts.top
 -->
 <template>
-    <div class="fileList row" v-loading="loading">
-        <div class="list" v-if="fileList && fileList.content.length > 0">
+    <div class="fileList" v-loading="searchStore.orther.load">
+        <div
+            class="list"
+            v-if="searchStore.data && searchStore.data.content.length > 0"
+        >
             <div
-                v-for="(item, index) in fileList.content"
+                v-for="(item, index) in searchStore.data.content"
                 :key="index"
                 @click="openFolder(item, index)"
             >
@@ -33,92 +36,49 @@
         </div>
     </div>
     <el-pagination
-        v-if="fileList && fileList.content.length > 0"
+        v-if="searchStore.data && searchStore.data.content.length > 0"
         background
         :page-sizes="[10, 30, 50, 100, 150, 200, 300, 500]"
         layout="total, sizes, prev, pager, next, jumper"
         size="small"
-        :default-page-size="30"
-        v-model:current-page="search.page"
-        v-model:page-size="search.per_page"
-        :total="fileList.total"
-        @size-change="getFsList"
-        @current-change="getFsList"
+        v-model:current-page="pageInfo.page"
+        v-model:page-size="pageInfo.per_page"
+        :total="searchStore.data.total"
     />
 
-    <FileInfoComm
-        v-if="fileList"
-        v-model:fileList="fileList.content"
-        v-model:index="infoIndex"
-        v-model:state="openInfoState"
-    />
+    <FileInfoComm v-if="searchStore.data" v-model:state="openInfoState" />
 </template>
 
 <script setup lang="ts">
-import * as FsType from "@/api/fs-type";
-import http from "@/api";
-import iconFileUtil from "@/utils/iconFileUtil";
-import usePathStore from "@/stores/pathStore";
 import formatUtil from "@/utils/formatUtil";
+import * as FsType from "@/api/fs-type";
+import useSearchStore from "@/stores/searchStore";
 
-const pathStore = usePathStore();
+const searchStore = useSearchStore();
 
-const w: any = window;
-
-defineExpose({
-    getFsList
+onMounted(() => {
+    searchStore.getList();
 });
 
-const search = defineModel<FsType.FsListType>("search", {
-    required: true
+const pageInfo = ref({
+    page: searchStore.params.page,
+    per_page: searchStore.params.per_page
 });
-
-const fileList = ref<FsType.FsListResType>();
-const loading = ref(false);
-
-/**
- * 获取文件列表
- */
-async function getFsList() {
-    loading.value = true;
-
-    // 路径不一致时，重置分页数据
-    if (search.value.path !== pathStore.currentPath) {
-        search.value.page = 1;
+watch(
+    () => pageInfo.value,
+    () => {
+        searchStore.setSearchData({
+            page: pageInfo.value.page,
+            per_page: pageInfo.value.per_page
+        });
+        searchStore.getList();
+    },
+    {
+        deep: true
     }
-
-    search.value.path = pathStore.currentPath;
-
-    // console.log("当前路径：", search.value.path);
-    const data = await http.fs.getFsList(search.value);
-    loading.value = false;
-
-    // url 处理
-    const contentCache = data.content.map((content) => {
-        // 根据文件名获取文件类型
-        const fileType = iconFileUtil.getIcon(content);
-        // 如果是图片，修改 thumb 拼上 api
-        if (fileType.type === "images") {
-            content.thumb = w.alistConfig.api + content.thumb;
-        }
-        // 拼接真实 url
-        content.url = `${w.alistConfig.api}/p/${pathStore.currentPath}/${content.name}?sign=${content.sign}`;
-        // 修改 icon 与 fileType
-        content.icon = fileType.icon;
-        content.fileType = fileType.type;
-
-        return content;
-    });
-    if (contentCache && contentCache.length > 0) {
-        data.content = contentCache as any;
-    }
-
-    fileList.value = data;
-    console.log("🚀文件列表 | fileList.value:", fileList.value);
-}
+);
 
 const openInfoState = ref(false);
-const infoIndex = ref(-1);
 
 /**
  * 打开文件夹
@@ -127,11 +87,10 @@ const infoIndex = ref(-1);
  */
 async function openFolder(item: FsType.ContentType, index: number) {
     if (!item.is_dir) {
-        infoIndex.value = index;
+        searchStore.orther.selectIndex = index;
         return (openInfoState.value = true);
     }
-    pathStore.push(item.name);
-    await getFsList();
+    searchStore.pushPath(item.name);
 }
 </script>
 
@@ -153,6 +112,7 @@ async function openFolder(item: FsType.ContentType, index: number) {
             justify-content: space-between;
             transition: all 0.1s ease-in-out;
             cursor: pointer;
+            border-radius: var(--border-radius);
 
             &:hover {
                 background-color: var(--hover-background);

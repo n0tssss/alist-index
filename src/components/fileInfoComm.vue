@@ -29,67 +29,41 @@
                 ></path>
             </svg>
         </div>
-        <div class="infoBox" v-if="state && fileList[currentIndex] && load">
+        <div
+            class="infoBox"
+            v-if="
+                state &&
+                searchStore.data &&
+                searchStore.data.content[searchStore.orther.selectIndex] &&
+                searchStore.orther.fileLoad
+            "
+        >
             <ImgInfoComm
-                v-if="fileList[currentIndex].fileType === 'images'"
-                v-model:fileList="fileList"
-                v-model:index="currentIndex"
+                v-if="
+                    searchStore.data.content[searchStore.orther.selectIndex]
+                        .fileType === 'images'
+                "
             />
             <VideoInfoComm
-                v-else-if="fileList[currentIndex].fileType === 'video'"
-                v-model:fileList="fileList"
-                v-model:index="currentIndex"
+                v-else-if="
+                    searchStore.data.content[searchStore.orther.selectIndex]
+                        .fileType === 'video'
+                "
             />
-            <OrtherFileComm
-                v-else
-                v-model:fileList="fileList"
-                v-model:index="currentIndex"
-            />
+            <OrtherFileComm v-else />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import * as FsType from "@/api/fs-type";
-// import http from "@/api";
-// import usePathStore from "@/stores/pathStore";
+import useSearchStore from "@/stores/searchStore";
 
-// const pathStore = usePathStore();
+const searchStore = useSearchStore();
 
-const fileList = defineModel<FsType.ContentType[]>("fileList", {
-    required: true
-});
-const currentIndex = defineModel<number>("index", {
-    required: true
-});
 const state = defineModel<boolean>("state", {
     required: true,
     default: false
 });
-
-const load = ref(true);
-
-// 获取文件详情，暂时用不上
-// const fsSearch = ref<FsType.FsListType>({} as any);
-// async function getFileInfo() {
-//     fsSearch.value.path =
-//         pathStore.currentPath + "/" + fileList.value[currentIndex.value].name;
-//     const data = await http.fs.getFs(fsSearch.value);
-//     fileList.value[currentIndex.value].url = data.raw_url;
-//     console.log(
-//         "🚀文件详情 | fileList.value[currentIndex.value]:",
-//         fileList.value[currentIndex.value]
-//     );
-
-//     load.value = true;
-// }
-
-// watch(
-//     () => currentIndex.value,
-//     () => {
-//         getFileInfo();
-//     }
-// );
 </script>
 
 <style scoped lang="less">

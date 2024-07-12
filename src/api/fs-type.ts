@@ -1,9 +1,9 @@
 export interface FsListType {
     path: string;
-    password: string;
-    page: number;
-    per_page: number;
-    refresh: boolean;
+    password?: string;
+    page?: number;
+    per_page?: number;
+    refresh?: boolean;
 }
 
 export interface ContentType {
@@ -47,4 +47,12 @@ export interface FsResType {
     header: string;
     provider: string;
     related: null;
+}
+
+export interface UpdateFsListType {
+    path?: string;
+    password?: string;
+    page?: number;
+    per_page?: number;
+    refresh?: boolean;
 }

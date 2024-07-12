@@ -60,7 +60,7 @@ onMounted(() => {
 
 onUnmounted(() => {
     if (mp) mp.destroy();
-    console.log("视频组件销毁");
+    // console.log("视频组件销毁");
 });
 </script>
 

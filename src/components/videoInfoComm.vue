@@ -29,21 +29,18 @@
 </template>
 
 <script setup lang="ts">
-import * as FsType from "@/api/fs-type";
 import formatUtil from "@/utils/formatUtil";
 import "mui-player/dist/mui-player.min.css";
 import MuiPlayer from "mui-player";
 import MuiPlayerDesktopPlugin from "mui-player-desktop-plugin";
+import * as FsType from "@/api/fs-type";
+import usefileStore from "@/stores/fileStore";
 
-const fileList = defineModel<FsType.ContentType[]>("fileList", {
-    required: true
-});
-const currentIndex = defineModel<number>("index", {
-    required: true
-});
+const fileStore = usefileStore();
 
 const currentFile = computed(() => {
-    return fileList.value[currentIndex.value];
+    if (!fileStore.data) return {} as FsType.ContentType;
+    return fileStore.data.content[fileStore.orther.selectIndex];
 });
 
 let mp: any = null;
@@ -53,7 +50,6 @@ onMounted(() => {
         title: currentFile.value.name,
         src: currentFile.value.url,
         preload: true,
-        height: "50%",
         plugins: [new MuiPlayerDesktopPlugin()]
     });
 });
@@ -65,6 +61,10 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="less">
+#mui-player {
+    height: 60% !important;
+}
+
 .desc {
     height: 100%;
     padding: 50px;

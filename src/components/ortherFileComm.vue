@@ -1,3 +1,10 @@
+<!--
+ * @Author: N0ts
+ * @Date: 2024-07-13 18:43:14
+ * @Description: 其他文件详情
+ * @FilePath: \alist-index\src\components\ortherFileComm.vue
+ * @Mail：mail@n0ts.top
+-->
 <template>
     <div class="desc">
         <div class="icon" v-html="currentFile.icon"></div>
@@ -30,18 +37,14 @@
 <script setup lang="ts">
 import * as FsType from "@/api/fs-type";
 import formatUtil from "@/utils/formatUtil";
+import usefileStore from "@/stores/fileStore";
 
-const fileList = defineModel<FsType.ContentType[]>("fileList", {
-    required: true
-});
-const currentIndex = defineModel<number>("index", {
-    required: true
-});
+const fileStore = usefileStore();
 
 const currentFile = computed(() => {
-    return fileList.value[currentIndex.value];
+    if (!fileStore.data) return {} as FsType.ContentType;
+    return fileStore.data.content[fileStore.orther.selectIndex];
 });
-console.log("🚀文件详情 | currentFile.value:", currentFile.value);
 </script>
 
 <style scoped lang="less">

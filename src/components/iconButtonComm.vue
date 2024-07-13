@@ -1,13 +1,23 @@
+<!--
+ * @Author: N0ts
+ * @Date: 2024-07-13 18:43:14
+ * @Description: 小工具图标
+ * @FilePath: \alist-index\src\components\iconButtonComm.vue
+ * @Mail：mail@n0ts.top
+-->
 <template>
     <div class="iconBtn">
-        <slot default></slot>
+        <div v-html="IconData[props.icon]"></div>
         <div class="tip">{{ props.tip }}</div>
     </div>
 </template>
 
 <script setup lang="ts">
+import IconData from "@/data/icon";
+
 const props = defineProps<{
     tip: string;
+    icon: keyof typeof IconData;
 }>();
 </script>
 
@@ -49,6 +59,7 @@ const props = defineProps<{
         white-space: nowrap;
         opacity: 0;
         visibility: hidden;
+        z-index: 9999;
     }
 
     &:hover .tip {

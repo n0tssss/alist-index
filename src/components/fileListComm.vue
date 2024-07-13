@@ -6,13 +6,13 @@
  * @Mail：mail@n0ts.top
 -->
 <template>
-    <div class="fileList" v-loading="searchStore.orther.load">
+    <div class="fileList" v-loading="fileStore.orther.load">
         <div
             class="list"
-            v-if="searchStore.data && searchStore.data.content.length > 0"
+            v-if="fileStore.data && fileStore.data.content.length > 0"
         >
             <div
-                v-for="(item, index) in searchStore.data.content"
+                v-for="(item, index) in fileStore.data.content"
                 :key="index"
                 @click="openFolder(item, index)"
             >
@@ -36,42 +36,42 @@
         </div>
     </div>
     <el-pagination
-        v-if="searchStore.data && searchStore.data.content.length > 0"
+        v-if="fileStore.data && fileStore.data.content.length > 0"
         background
         :page-sizes="[10, 30, 50, 100, 150, 200, 300, 500]"
         layout="total, sizes, prev, pager, next, jumper"
         size="small"
         v-model:current-page="pageInfo.page"
         v-model:page-size="pageInfo.per_page"
-        :total="searchStore.data.total"
+        :total="fileStore.data.total"
     />
 
-    <FileInfoComm v-if="searchStore.data" v-model:state="openInfoState" />
+    <FileInfoComm v-if="fileStore.data" v-model:state="openInfoState" />
 </template>
 
 <script setup lang="ts">
 import formatUtil from "@/utils/formatUtil";
 import * as FsType from "@/api/fs-type";
-import useSearchStore from "@/stores/searchStore";
+import usefileStore from "@/stores/fileStore";
 
-const searchStore = useSearchStore();
+const fileStore = usefileStore();
 
 onMounted(() => {
-    searchStore.getList();
+    fileStore.getList();
 });
 
 const pageInfo = ref({
-    page: searchStore.params.page,
-    per_page: searchStore.params.per_page
+    page: fileStore.params.page,
+    per_page: fileStore.params.per_page
 });
 watch(
     () => pageInfo.value,
     () => {
-        searchStore.setSearchData({
+        fileStore.setSearchData({
             page: pageInfo.value.page,
             per_page: pageInfo.value.per_page
         });
-        searchStore.getList();
+        fileStore.getList();
     },
     {
         deep: true
@@ -87,10 +87,10 @@ const openInfoState = ref(false);
  */
 async function openFolder(item: FsType.ContentType, index: number) {
     if (!item.is_dir) {
-        searchStore.orther.selectIndex = index;
+        fileStore.setCurrentIndex(index);
         return (openInfoState.value = true);
     }
-    searchStore.pushPath(item.name);
+    fileStore.pushPath(item.name);
 }
 </script>
 

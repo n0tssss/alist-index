@@ -8,8 +8,9 @@
 <template>
     <div>
         <PathComm />
-        <!-- <ToolBarComm /> -->
+        <ToolBarComm />
         <fileListComm />
+        <SearchComm />
     </div>
 </template>
 

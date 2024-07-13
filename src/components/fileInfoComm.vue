@@ -33,20 +33,20 @@
             class="infoBox"
             v-if="
                 state &&
-                searchStore.data &&
-                searchStore.data.content[searchStore.orther.selectIndex] &&
-                searchStore.orther.fileLoad
+                fileStore.data &&
+                fileStore.data.content[fileStore.orther.selectIndex] &&
+                !fileStore.orther.fileLoad
             "
         >
             <ImgInfoComm
                 v-if="
-                    searchStore.data.content[searchStore.orther.selectIndex]
+                    fileStore.data.content[fileStore.orther.selectIndex]
                         .fileType === 'images'
                 "
             />
             <VideoInfoComm
                 v-else-if="
-                    searchStore.data.content[searchStore.orther.selectIndex]
+                    fileStore.data.content[fileStore.orther.selectIndex]
                         .fileType === 'video'
                 "
             />
@@ -56,9 +56,9 @@
 </template>
 
 <script setup lang="ts">
-import useSearchStore from "@/stores/searchStore";
+import usefileStore from "@/stores/fileStore";
 
-const searchStore = useSearchStore();
+const fileStore = usefileStore();
 
 const state = defineModel<boolean>("state", {
     required: true,
@@ -95,7 +95,7 @@ const state = defineModel<boolean>("state", {
         border-radius: var(--border-radius);
         padding: 5px 5px 0;
         box-sizing: border-box;
-        z-index: 10;
+        z-index: 9999;
 
         :deep(svg) {
             transition: all 0.2s ease-in-out;

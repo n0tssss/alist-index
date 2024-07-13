@@ -56,3 +56,34 @@ export interface UpdateFsListType {
     per_page?: number;
     refresh?: boolean;
 }
+
+export interface SearchFsType {
+    /** @param 搜索目录 */
+    parent: string;
+    /** @param 关键字 */
+    keywords: string;
+    /** @param 0-全部 1-文件夹 2-文件 */
+    scope: 0 | 1 | 2;
+    /** @param 页数 */
+    page: number;
+    /** @param 每页数目 */
+    per_page: number;
+    /** @param 密码 */
+    password: string;
+}
+
+export interface SearchFsResContentType {
+    parent: string;
+    name: string;
+    is_dir: boolean;
+    size: number;
+    type: number;
+    thumb: string;
+    fileType: string;
+    icon: string;
+}
+
+export interface SearchFsResType {
+    content: SearchFsResContentType[];
+    total: number;
+}

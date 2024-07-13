@@ -74,35 +74,36 @@ import formatUtil from "@/utils/formatUtil";
 import Viewer from "viewerjs";
 import "viewerjs/dist/viewer.css";
 import http from "@/api";
-import usePathStore from "@/stores/pathStore";
+import usefileStore from "@/stores/fileStore";
 
-const pathStore = usePathStore();
+const fileStore = usefileStore();
 
 onMounted(() => {
     selectImg(imgIndex.value);
 });
 
-const fileList = defineModel<FsType.ContentType[]>("fileList", {
-    required: true
-});
-const currentIndex = defineModel<number>("index", {
-    required: true
-});
-
-const imgList = computed(() => {
-    return fileList.value.filter((item) => {
-        return item.fileType === "images";
-    });
-});
-// console.log("🚀筛选后的图片数据 | imgList.value:", imgList.value);
-
 // 修正索引
 const imgIndex = ref(0);
-for (let i = 0; i < imgList.value.length; i++) {
-    if (imgList.value[i].name === fileList.value[currentIndex.value].name) {
-        imgIndex.value = i;
+
+const imgList = computed(() => {
+    if (!fileStore.data) return [];
+
+    const cache = fileStore.data.content.filter((item) => {
+        return item.fileType === "images";
+    });
+
+    for (let i = 0; i < cache.length; i++) {
+        if (
+            cache[i].name ===
+            fileStore.data.content[fileStore.orther.selectIndex].name
+        ) {
+            imgIndex.value = i;
+        }
     }
-}
+
+    return cache;
+});
+console.log("图片列表", imgList.value);
 
 const fsSearch = ref<FsType.FsListType>({} as any);
 
@@ -125,7 +126,7 @@ async function selectImg(i: number) {
     // 获取图片真实路径
     if (!imgList.value[i].url) {
         fsSearch.value.path =
-            pathStore.currentPath + "/" + imgList.value[i].name;
+            fileStore.currentPath + "/" + imgList.value[i].name;
         const data = await http.fs.getFs(fsSearch.value);
         imgList.value[i].url = data.raw_url;
     }

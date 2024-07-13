@@ -250,7 +250,7 @@ function handle(icon: string) {
 }
 
 export default {
-    getIcon(file: FsType.ContentType) {
+    getIcon(file: { name: string; is_dir: boolean }) {
         if (!file) throw new Error("getIcon 需要传入 ContentType 文件！");
         if (file.is_dir)
             return { type: "folder", icon: handle(defaultIcons.folder) };

@@ -7,9 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    copy: typeof import('./components/imgInfoComm copy.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
-    ElIcon: typeof import('element-plus/es')['ElIcon']
     ElImage: typeof import('element-plus/es')['ElImage']
     ElPagination: typeof import('element-plus/es')['ElPagination']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
@@ -22,8 +20,9 @@ declare module 'vue' {
     PathComm: typeof import('./components/pathComm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SearchComm: typeof import('./components/searchComm.vue')['default']
+    TempCodeRunnerFile: typeof import('./components/tempCodeRunnerFile.vue')['default']
     ToolBarComm: typeof import('./components/toolBarComm.vue')['default']
-    VideoComm: typeof import('./components/videoComm.vue')['default']
     VideoInfoComm: typeof import('./components/videoInfoComm.vue')['default']
   }
   export interface ComponentCustomProperties {

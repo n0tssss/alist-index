@@ -35,7 +35,43 @@ body,
     backdrop-filter: var(--backdrop-filter-blur);
 }
 
-// .el-pager li,
-// .el-pagination button {
-//     background-color: var(--background) !important;
-// }
+/* 滚动条 */
+#app::-webkit-scrollbar {
+    width: 8px;
+    height: 1px;
+}
+
+#app::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #868686;
+}
+
+#app::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+:root {
+    --el-text-color-regular: var(--font-color) !important;
+    --el-fill-color-blank: var(--background-light) !important;
+    --el-border-color: var(--background) !important;
+    --el-bg-color-overlay: var(--background) !important;
+    --el-fill-color-light: var(--hover-background) !important;
+}
+
+input {
+    border: none;
+    background-color: var(--background);
+    color: var(--font-color);
+    padding: 8px 10px;
+    box-sizing: border-box;
+    border-radius: var(--border-radius);
+    outline: none;
+    border: 1px solid transparent;
+    transition: all 0.1s ease-in-out;
+
+    &:focus {
+        border: 1px solid var(--theme-color);
+    }
+}

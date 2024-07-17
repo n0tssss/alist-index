@@ -81,6 +81,7 @@ export interface SearchFsResContentType {
     thumb: string;
     fileType: string;
     icon: string;
+    html: string;
 }
 
 export interface SearchFsResType {

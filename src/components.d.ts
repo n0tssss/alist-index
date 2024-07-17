@@ -21,7 +21,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchComm: typeof import('./components/searchComm.vue')['default']
-    TempCodeRunnerFile: typeof import('./components/tempCodeRunnerFile.vue')['default']
     ToolBarComm: typeof import('./components/toolBarComm.vue')['default']
     VideoInfoComm: typeof import('./components/videoInfoComm.vue')['default']
   }

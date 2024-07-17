@@ -23,7 +23,7 @@ export default defineStore("file", {
         data: null as null | FsType.FsListResType,
         file: null as null | FsType.FsResType,
         orther: {
-            path: ["n0ts", "照片与视频", "5t"] as string[], // 路径
+            path: [] as string[], // 路径
             load: false, // 当前文件列表是否在加载
             selectIndex: -1, // 当前选中文件
             fileLoad: false // 当前文件是否在加载
@@ -61,7 +61,9 @@ export default defineStore("file", {
                 refresh: refresh ?? false
             });
 
-            // url 处理
+            if (!data.content) data.content = [];
+
+            // 数据处理
             const contentCache = data.content.map((content) => {
                 // 根据文件名获取文件类型
                 const fileType = iconFileUtil.getIcon(content);

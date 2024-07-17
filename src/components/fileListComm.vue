@@ -34,6 +34,7 @@
                 </div>
             </div>
         </div>
+        <div v-else>该地方空空如也~</div>
     </div>
     <el-pagination
         v-if="fileStore.data && fileStore.data.content.length > 0"

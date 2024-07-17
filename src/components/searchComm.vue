@@ -12,15 +12,30 @@
         :class="{ maskShow: searchStore.dialog }"
         @click="searchStore.toggleDialog"
     ></div>
-    <div class="box" :class="{ boxShow: searchStore.dialog }">
+    <div
+        class="box"
+        :class="{
+            boxShow: searchStore.dialog,
+            open:
+                searchStore.data &&
+                searchStore.data.content &&
+                searchStore.data.content.length > 0
+        }"
+    >
         <div class="opration">
             <input
                 type="text"
                 placeholder="🔍 搜点什么？"
-                v-model="searchData.keywords"
+                v-model="searchStore.params.keywords"
+                @input="search(false)"
+                @keydown.enter="search(true)"
             />
         </div>
-        <div class="result" v-if="searchStore.data">
+        <div
+            class="result scrollBar"
+            v-if="searchStore.data"
+            v-loading="searchStore.load"
+        >
             <div v-for="(item, index) in searchStore.data.content" :key="index">
                 <div class="left">
                     <div class="icon">
@@ -32,7 +47,7 @@
                         />
                         <div v-else v-html="item.icon"></div>
                     </div>
-                    <p>{{ item.name }}</p>
+                    <p v-html="item.html"></p>
                 </div>
                 <div class="right" v-if="!item.is_dir">
                     {{ formatUtil.bitToMBOrGB(item.size) }}
@@ -44,35 +59,20 @@
 
 <script setup lang="ts">
 import useSearchStore from "@/stores/searchStore";
-import useFileStore from "@/stores/fileStore";
 import formatUtil from "@/utils/formatUtil";
 
 const searchStore = useSearchStore();
-const fileStore = useFileStore();
 
 let searchTimeout = null as null | number;
-const searchData = ref({
-    parent: fileStore.currentPath,
-    keywords: "",
-    scope: 0 as 0 | 1 | 2,
-    page: 1,
-    per_page: 30,
-    password: ""
-});
 
-watch(
-    () => searchData.value.keywords,
-    () => {
-        search();
-    }
-);
-
-async function search() {
+async function search(now?: boolean) {
     if (searchTimeout) clearTimeout(searchTimeout);
+    if (now) return await searchStore.search();
+
     searchTimeout = setTimeout(async () => {
-        await searchStore.search(searchData.value);
+        await searchStore.search();
         console.log("🚀搜索结果 | searchStore.data:", searchStore.data);
-    }, 500);
+    }, 300);
 }
 </script>
 
@@ -99,12 +99,13 @@ async function search() {
 
 .box {
     position: fixed;
-    top: 10%;
+    top: 30%;
     left: 50%;
     z-index: 9999;
     transform: translateX(-50%) scale(0);
     width: 50%;
     max-width: 800px;
+    height: 100px;
     border-radius: var(--border-radius);
     background-color: var(--background-light);
     padding: 30px 50px;
@@ -122,11 +123,14 @@ async function search() {
     }
 
     .result {
-        height: 80%;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
-        grid-auto-flow: row dense;
+        height: 95%;
+        display: flex;
+        flex-direction: column;
         overflow-y: auto;
+        overflow-x: hidden;
+        margin-top: 10px;
+        padding-right: 10px;
+        box-sizing: border-box;
 
         > div {
             display: flex;
@@ -137,11 +141,8 @@ async function search() {
             align-items: center;
 
             &:hover {
+                background-color: var(--background);
                 transform: scale(1.02);
-            }
-
-            &:hover .left > p {
-                overflow: initial;
             }
         }
 
@@ -170,6 +171,11 @@ async function search() {
                 display: -webkit-box;
                 -webkit-line-clamp: 3;
                 -webkit-box-orient: vertical;
+
+                :deep(em) {
+                    color: red;
+                    font-style: normal;
+                }
             }
 
             .icon {
@@ -210,6 +216,11 @@ async function search() {
             color: var(--sub-font-color);
         }
     }
+}
+
+.open {
+    height: 80%;
+    top: 10%;
 }
 
 .boxShow {

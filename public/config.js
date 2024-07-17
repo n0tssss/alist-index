@@ -7,5 +7,6 @@
  */
 
 window.alistConfig = {
-    api: "http://mc.roselle.vip:37615"
+    // api: "http://mc.roselle.vip:37615"
+    api: "http://127.0.0.1:5244"
 };

@@ -1,8 +1,32 @@
+/*
+ * @Author: N0ts
+ * @Date: 2024-07-10 15:17:18
+ * @Description: 请求异常拦截
+ * @FilePath: \alist-index\src\filter\httpFilter.ts
+ * @Mail：mail@n0ts.top
+ */
+
+import tipText from "@/api/tip-text";
 import type { AxiosResponse } from "axios";
+import { ElMessage } from "element-plus";
 
 export default function (response: AxiosResponse<any, any>) {
-    if (response.data.code === 401) {
-        console.error("登陆失效！");
+    switch (response.data.code) {
+        case 400:
+            ElMessage.error("请求错误！");
+            break;
+        case 401:
+            ElMessage.error("登录失效！请重新登录");
+            return Promise.reject("登录失效！请重新登录");
+        case 403:
+            ElMessage.error("拒绝访问！");
+            return Promise.reject("拒绝访问！");
+        case 404:
+            ElMessage.error("请求地址出错！");
+            break;
+        case 500:
+            ElMessage.error(tipText(response.data.message));
+            break;
     }
-    return response;
+    return response.data;
 }

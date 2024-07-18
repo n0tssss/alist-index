@@ -64,6 +64,13 @@ const state = defineModel<boolean>("state", {
     required: true,
     default: false
 });
+
+watch(
+    () => state.value,
+    () => {
+        console.log(fileStore.orther.route?.params.path);
+    }
+);
 </script>
 
 <style scoped lang="less">

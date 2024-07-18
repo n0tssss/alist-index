@@ -81,7 +81,7 @@ async function search(now?: boolean) {
     position: fixed;
     left: 0;
     top: 0;
-    z-index: 9999;
+    z-index: 2000;
     width: 100%;
     height: 100%;
     background-color: var(--mask-color);
@@ -101,7 +101,7 @@ async function search(now?: boolean) {
     position: fixed;
     top: 30%;
     left: 50%;
-    z-index: 9999;
+    z-index: 2000;
     transform: translateX(-50%) scale(0);
     width: 50%;
     max-width: 800px;

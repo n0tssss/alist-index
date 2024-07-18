@@ -24,7 +24,7 @@ export default defineStore("search", {
             password: ""
         },
         data: {} as null | FsType.SearchFsResType,
-        dialog: true,
+        dialog: false,
         load: false
     }),
     getters: {},
@@ -39,6 +39,8 @@ export default defineStore("search", {
             }
 
             this.load = true;
+
+            this.params.parent = fileStore.currentPath;
 
             const response = await http.fs.searchFs(this.params);
 

@@ -9,6 +9,8 @@ import { defineStore } from "pinia";
 import * as FsType from "@/api/fs-type";
 import http from "@/api";
 import iconFileUtil from "@/utils/iconFileUtil";
+import type { RouteLocationNormalizedLoadedGeneric, Router } from "vue-router";
+
 const w: any = window;
 
 export default defineStore("file", {
@@ -26,7 +28,11 @@ export default defineStore("file", {
             path: [] as string[], // 路径
             load: false, // 当前文件列表是否在加载
             selectIndex: -1, // 当前选中文件
-            fileLoad: false // 当前文件是否在加载
+            fileLoad: false, // 当前文件是否在加载
+            lastPath: "", // 最后一次路径
+            // 路由
+            route: null as null | RouteLocationNormalizedLoadedGeneric,
+            router: null as null | any
         }
     }),
     getters: {
@@ -36,11 +42,17 @@ export default defineStore("file", {
     },
     actions: {
         setPath(path: string[]) {
+            if (this.orther.lastPath == path.join("/")) {
+                return;
+            }
+
             this.orther.path = path;
+            this.params.page = 1;
             this.getList();
         },
         pushPath(path: string) {
             this.orther.path.push(path);
+            this.params.page = 1;
             this.getList();
         },
         setSearchData(data: FsType.UpdateFsListType) {
@@ -55,13 +67,22 @@ export default defineStore("file", {
 
             // 路径转字符串
             this.params.path = this.orther.path.join("/");
+            // 存储最后一次路径
+            this.orther.lastPath = this.params.path;
+            // 修改路由
+            this.orther.router.replace("/" + this.params.path);
 
-            const data = await http.fs.getFsList({
+            let data = await http.fs.getFsList({
                 ...this.params,
                 refresh: refresh ?? false
             });
 
-            if (!data.content) data.content = [];
+            if (!data || !data.content) {
+                data = {
+                    content: []
+                } as any;
+                this.orther.load = false;
+            }
 
             // 数据处理
             const contentCache = data.content.map((content) => {
@@ -123,6 +144,13 @@ export default defineStore("file", {
         setCurrentIndex(i: number) {
             this.orther.selectIndex = i;
             this.getFile();
+        },
+        setRoute(r: RouteLocationNormalizedLoadedGeneric, router: Router) {
+            this.orther.route = r;
+            this.orther.path = !r.params.path
+                ? []
+                : (r.params.path as string[]);
+            this.orther.router = router;
         }
     }
 });

@@ -56,6 +56,10 @@ import * as FsType from "@/api/fs-type";
 import usefileStore from "@/stores/fileStore";
 
 const fileStore = usefileStore();
+const route = useRoute();
+const router = useRouter();
+
+fileStore.setRoute(route, router);
 
 onMounted(() => {
     fileStore.getList();

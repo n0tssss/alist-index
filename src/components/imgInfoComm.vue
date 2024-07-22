@@ -24,25 +24,25 @@
             </div>
         </div>
 
-        <div class="desc">
+        <div class="desc" v-if="fileStore.file">
             <div class="imgDesc" v-loading="imgLoad">
                 <img
-                    :src="imgList[imgIndex].url"
-                    :alt="imgList[imgIndex].name"
-                    :key="imgList[imgIndex].name"
+                    :src="fileStore.file.raw_url"
+                    :alt="fileStore.file.name"
+                    :key="fileStore.file.name"
                     @load="imgLoadSuccess"
                 />
             </div>
-            <p class="title">{{ imgList[imgIndex].name }}</p>
+            <p class="title">{{ fileStore.file.name }}</p>
             <div class="fileInfo">
                 <span
                     >大小：{{
-                        formatUtil.bitToMBOrGB(imgList[imgIndex].size)
+                        formatUtil.bitToMBOrGB(fileStore.file.size)
                     }}</span
                 >
                 <span
                     >创建：{{
-                        formatUtil.timeToDate(imgList[imgIndex].created)
+                        formatUtil.timeToDate(fileStore.file.created)
                     }}</span
                 >
             </div>
@@ -52,7 +52,7 @@
                         type="success"
                         icon="CopyDocument"
                         circle
-                        @click="formatUtil.copy(imgList[imgIndex].url)"
+                        @click="formatUtil.copy(fileStore.file.raw_url)"
                     />
                 </el-tooltip>
                 <el-tooltip content="下载" placement="bottom">
@@ -60,7 +60,7 @@
                         type="primary"
                         icon="Download"
                         circle
-                        @click="formatUtil.openUrl(imgList[imgIndex].url)"
+                        @click="formatUtil.openUrl(fileStore.file.raw_url)"
                     />
                 </el-tooltip>
             </div>
@@ -93,10 +93,7 @@ const imgList = computed(() => {
     });
 
     for (let i = 0; i < cache.length; i++) {
-        if (
-            cache[i].name ===
-            fileStore.data.content[fileStore.orther.selectIndex].name
-        ) {
+        if (cache[i].name === fileStore.file?.name) {
             imgIndex.value = i;
         }
     }

@@ -8,11 +8,14 @@
 <template>
     <div
         class="fileInfoMask"
-        @click="state = false"
-        :class="{ fileInfoMaskShow: state }"
+        @click="fileStore.orther.fileInfoState = false"
+        :class="{ fileInfoMaskShow: fileStore.orther.fileInfoState }"
     ></div>
-    <div class="fileInfo" :class="{ fileInfoShow: state }">
-        <div class="close" @click="state = false">
+    <div
+        class="fileInfo"
+        :class="{ fileInfoShow: fileStore.orther.fileInfoState }"
+    >
+        <div class="close" @click="fileStore.orther.fileInfoState = false">
             <svg
                 fill="currentColor"
                 stroke-width="0"
@@ -32,24 +35,13 @@
         <div
             class="infoBox"
             v-if="
-                state &&
-                fileStore.data &&
-                fileStore.data.content[fileStore.orther.selectIndex] &&
+                fileStore.orther.fileInfoState &&
+                fileStore.file &&
                 !fileStore.orther.fileLoad
             "
         >
-            <ImgInfoComm
-                v-if="
-                    fileStore.data.content[fileStore.orther.selectIndex]
-                        .fileType === 'images'
-                "
-            />
-            <VideoInfoComm
-                v-else-if="
-                    fileStore.data.content[fileStore.orther.selectIndex]
-                        .fileType === 'video'
-                "
-            />
+            <ImgInfoComm v-if="fileStore.file.fileType === 'images'" />
+            <VideoInfoComm v-else-if="fileStore.file.fileType === 'video'" />
             <OrtherFileComm v-else />
         </div>
     </div>
@@ -60,15 +52,18 @@ import usefileStore from "@/stores/fileStore";
 
 const fileStore = usefileStore();
 
-const state = defineModel<boolean>("state", {
-    required: true,
-    default: false
-});
-
 watch(
-    () => state.value,
-    () => {
-        console.log(fileStore.orther.route?.params.path);
+    () => fileStore.orther.fileInfoState,
+    (state) => {
+        if (!fileStore.file) return;
+        if (!state) {
+            fileStore.orther.router.replace(
+                "/" + fileStore.params.path.replace(fileStore.file.name, "")
+            );
+        }
+    },
+    {
+        immediate: true
     }
 );
 </script>

@@ -7,16 +7,22 @@
 -->
 <template>
     <div class="header">
-        <div class="title" @click="router.push('/')">{{ webInfoStore.webInfo.site_title }}</div>
-        <div>搜索</div>
+        <div
+            class="title"
+            @click="fileStore.setPath(fileStore.orther.path.slice(0, 0))"
+        >
+            <img :src="webInfoStore.webInfo.logo" alt="logo" />
+            <p>{{ webInfoStore.webInfo.site_title }}</p>
+        </div>
+        <!-- <div>搜索</div> -->
     </div>
 </template>
 
 <script setup lang="ts">
 import useWebInfoStore from "@/stores/webInfoStore";
-import { useRouter } from "vue-router";
-const router = useRouter();
+import usefileStore from "@/stores/fileStore";
 
+const fileStore = usefileStore();
 const webInfoStore = useWebInfoStore();
 </script>
 
@@ -37,6 +43,15 @@ const webInfoStore = useWebInfoStore();
         cursor: pointer;
         font-size: 1.2rem;
         font-weight: bold;
+        display: flex;
+        align-items: center;
+        transition: 0.2s ease-in-out;
+
+        img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
 
         &:hover {
             color: var(--theme-color-highlight);

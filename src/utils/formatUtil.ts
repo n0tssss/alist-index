@@ -1,3 +1,10 @@
+/*
+ * @Author: N0ts
+ * @Date: 2024-07-11 10:27:40
+ * @Description: 转换工具
+ * @FilePath: \alist-index\src\utils\formatUtil.ts
+ * @Mail：mail@n0ts.top
+ */
 import { ElMessage } from "element-plus";
 
 export default {
@@ -6,11 +13,16 @@ export default {
      * @param bit 字节
      */
     bitToMBOrGB(bit: number) {
+        if (bit < 1024) {
+            return `${bit} B`;
+        }
+        if (bit < 1024 * 1024) {
+            return `${(bit / 1024).toFixed(2)} KB`;
+        }
         if (bit < 1024 * 1024 * 1024) {
             return `${(bit / 1024 / 1024).toFixed(2)} MB`;
-        } else {
-            return `${(bit / 1024 / 1024 / 1024).toFixed(2)} GB`;
         }
+        return `${(bit / 1024 / 1024 / 1024).toFixed(2)} GB`;
     },
     /**
      * 时间转 年月日时分秒，全部保留两位

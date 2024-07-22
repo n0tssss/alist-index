@@ -47,7 +47,7 @@
         :total="fileStore.data.total"
     />
 
-    <FileInfoComm v-if="fileStore.data" v-model:state="openInfoState" />
+    <FileInfoComm v-if="fileStore.data" />
 </template>
 
 <script setup lang="ts">
@@ -62,7 +62,7 @@ const router = useRouter();
 fileStore.setRoute(route, router);
 
 onMounted(() => {
-    fileStore.getList();
+    fileStore.init();
 });
 
 const pageInfo = ref({
@@ -83,8 +83,6 @@ watch(
     }
 );
 
-const openInfoState = ref(false);
-
 /**
  * 打开文件夹
  * @param item 文件数据
@@ -93,7 +91,7 @@ const openInfoState = ref(false);
 async function openFolder(item: FsType.ContentType, index: number) {
     if (!item.is_dir) {
         fileStore.setCurrentIndex(index);
-        return (openInfoState.value = true);
+        return (fileStore.orther.fileInfoState = true);
     }
     fileStore.pushPath(item.name);
 }

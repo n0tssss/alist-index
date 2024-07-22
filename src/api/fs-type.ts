@@ -47,6 +47,8 @@ export interface FsResType {
     header: string;
     provider: string;
     related: null;
+    fileType?: string;
+    icon?: string;
 }
 
 export interface UpdateFsListType {

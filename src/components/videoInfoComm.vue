@@ -13,7 +13,7 @@
                     type="success"
                     icon="CopyDocument"
                     circle
-                    @click="formatUtil.copy(currentFile.url)"
+                    @click="formatUtil.copy(currentFile.raw_url)"
                 />
             </el-tooltip>
             <el-tooltip content="下载" placement="bottom">
@@ -21,7 +21,7 @@
                     type="primary"
                     icon="Download"
                     circle
-                    @click="formatUtil.openUrl(currentFile.url)"
+                    @click="formatUtil.openUrl(currentFile.raw_url)"
                 />
             </el-tooltip>
         </div>
@@ -39,8 +39,8 @@ import usefileStore from "@/stores/fileStore";
 const fileStore = usefileStore();
 
 const currentFile = computed(() => {
-    if (!fileStore.data) return {} as FsType.ContentType;
-    return fileStore.data.content[fileStore.orther.selectIndex];
+    if (!fileStore.file) return {} as FsType.FsResType;
+    return fileStore.file;
 });
 
 let mp: any = null;
@@ -48,7 +48,7 @@ onMounted(() => {
     mp = new MuiPlayer({
         container: "#mui-player",
         title: currentFile.value.name,
-        src: currentFile.value.url,
+        src: currentFile.value.raw_url,
         preload: true,
         plugins: [new MuiPlayerDesktopPlugin()]
     });

@@ -32,16 +32,9 @@
                 ></path>
             </svg>
         </div>
-        <div
-            class="infoBox"
-            v-if="
-                fileStore.orther.fileInfoState &&
-                fileStore.file &&
-                !fileStore.orther.fileLoad
-            "
-        >
-            <ImgInfoComm v-if="fileStore.file.fileType === 'images'" />
-            <VideoInfoComm v-else-if="fileStore.file.fileType === 'video'" />
+        <div class="infoBox">
+            <ImgInfoComm v-if="fileStore.file?.fileType === 'images'" />
+            <VideoInfoComm v-else-if="fileStore.file?.fileType === 'video'" />
             <OrtherFileComm v-else />
         </div>
     </div>

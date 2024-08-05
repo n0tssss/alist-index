@@ -73,19 +73,19 @@ import * as FsType from "@/api/fs-type";
 import formatUtil from "@/utils/formatUtil";
 import Viewer from "viewerjs";
 import "viewerjs/dist/viewer.css";
-import http from "@/api";
 import usefileStore from "@/stores/fileStore";
 
 const fileStore = usefileStore();
 
 onMounted(() => {
-    selectImg(imgIndex.value);
+    imgListScroll(fileStore.orther.selectIndex);
 });
 
 // 修正索引
 const imgIndex = ref(0);
 
-const imgList = computed(() => {
+const imgList = ref<FsType.ContentType[]>();
+function imgListInit() {
     if (!fileStore.data) return [];
 
     const cache = fileStore.data.content.filter((item) => {
@@ -98,17 +98,25 @@ const imgList = computed(() => {
         }
     }
 
-    return cache;
-});
-console.log("图片列表", imgList.value);
-
-const fsSearch = ref<FsType.FsListType>({} as any);
+    imgList.value = cache;
+}
+imgListInit();
 
 /**
  * 根据索引定位导航栏图片
  * @param i 索引
  */
 async function selectImg(i: number) {
+    if (i == imgIndex.value) return;
+    imgLoad.value = true;
+
+    await fileStore.setCurrentIndex(i);
+    imgListScroll(i);
+
+    imgIndex.value = i;
+}
+
+function imgListScroll(i: number) {
     const scrollDom = document.querySelector(".imgList > div") as HTMLElement;
     const imgDom = document.querySelectorAll(
         ".imgList > div > div"
@@ -116,19 +124,6 @@ async function selectImg(i: number) {
     if (scrollDom) {
         scrollDom.style.transform = `translateX(-${(imgDom.clientWidth + 10) * i}px)`;
     }
-
-    if (i == imgIndex.value) return;
-    imgLoad.value = true;
-
-    // 获取图片真实路径
-    if (!imgList.value[i].url) {
-        fsSearch.value.path =
-            fileStore.currentPath + "/" + imgList.value[i].name;
-        const data = await http.fs.getFs(fsSearch.value);
-        imgList.value[i].url = data.raw_url;
-    }
-
-    imgIndex.value = i;
 }
 
 /**

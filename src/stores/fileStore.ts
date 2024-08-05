@@ -131,7 +131,7 @@ export default defineStore("file", {
             });
 
             this.data = data;
-            console.log("🚀文件列表 | this.data:", this.data);
+            // console.log("🚀文件列表 | this.data:", this.data);
 
             this.orther.load = false;
         },
@@ -158,13 +158,13 @@ export default defineStore("file", {
             if (this.orther.selectIndex != -1)
                 this.data.content[this.orther.selectIndex].url = data.raw_url;
 
-            console.log("🚀文件详情 | this.file:", this.file);
+            // console.log("🚀文件详情 | this.file:", this.file);
 
             this.orther.fileLoad = false;
         },
-        setCurrentIndex(i: number) {
+        async setCurrentIndex(i: number) {
             this.orther.selectIndex = i;
-            this.getFile();
+            await this.getFile();
         },
         setRoute(r: RouteLocationNormalizedLoadedGeneric, router: Router) {
             this.orther.route = r;

@@ -1,12 +1,5 @@
 /*
  * @Author: N0ts
- * @Date: 2024-07-08 08:58:14
- * @Description:
- * @FilePath: \alist-index\vite.config.ts
- * @Mail：mail@n0ts.top
- */
-/*
- * @Author: N0ts
  * @Date: 2024-07-07 23:42:13
  * @Description:
  * @FilePath: \alist-index\vite.config.ts

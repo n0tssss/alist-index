@@ -1,7 +1,7 @@
 /*
  * @Author: N0ts
  * @Date: 2024-07-07 23:42:13
- * @Description:
+ * @Description: 路由配置
  * @FilePath: \alist-index\src\router\index.ts
  * @Mail：mail@n0ts.top
  */

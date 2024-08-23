@@ -1,3 +1,10 @@
+<!--
+ * @Author: N0ts
+ * @Date: 2024-07-17 15:52:12
+ * @Description: 地址面包屑
+ * @FilePath: \alist-index\src\components\pathComm.vue
+ * @Mail: mail@n0ts.top
+-->
 <template>
     <div class="path">
         <div @click="pathClick(-1)">

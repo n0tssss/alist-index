@@ -1,3 +1,10 @@
+<!--
+ * @Author: N0ts
+ * @Date: 2024-07-17 15:52:12
+ * @Description: 视频详情
+ * @FilePath: \alist-index\src\components\videoInfoComm.vue
+ * @Mail: mail@n0ts.top
+-->
 <template>
     <div class="desc">
         <div id="mui-player"></div>

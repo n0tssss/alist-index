@@ -1,7 +1,7 @@
 /*
  * @Author: N0ts
  * @Date: 2024-07-13 22:19:28
- * @Description:
+ * @Description: 搜索操作
  * @FilePath: \alist-index\src\stores\searchStore.ts
  * @Mail：mail@n0ts.top
  */

@@ -1,4 +1,10 @@
-import * as FsType from "@/api/fs-type";
+/*
+ * @Author: N0ts
+ * @Date: 2024-07-17 15:52:12
+ * @Description: 图标工具
+ * @FilePath: \alist-index\src\utils\iconFileUtil.ts
+ * @Mail: mail@n0ts.top
+ */
 
 const fileCategories = {
     images: ["jpg", "jpeg", "png", "gif", "bmp", "svg", "tiff", "webp"],

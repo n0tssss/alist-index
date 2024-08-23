@@ -1,7 +1,7 @@
 /*
  * @Author: N0ts
  * @Date: 2024-07-12 13:58:20
- * @Description: 文件列表搜索仓库
+ * @Description: 文件列表
  * @FilePath: \alist-index\src\stores\fileStore.ts
  * @Mail：mail@n0ts.top
  */

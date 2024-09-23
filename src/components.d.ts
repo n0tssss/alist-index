@@ -16,6 +16,8 @@ declare module 'vue' {
     HeaderComm: typeof import('./components/headerComm.vue')['default']
     IconButtonComm: typeof import('./components/iconButtonComm.vue')['default']
     ImgInfoComm: typeof import('./components/imgInfoComm.vue')['default']
+    Login: typeof import('./components/login.vue')['default']
+    LoginComm: typeof import('./components/loginComm.vue')['default']
     OrtherFileComm: typeof import('./components/ortherFileComm.vue')['default']
     PathComm: typeof import('./components/pathComm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
